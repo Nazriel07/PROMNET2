@@ -52,7 +52,7 @@ class AnggotaController extends Controller
      */
     public function edit(Anggota $anggota)
     {
-        //
+        return view('anggota.edit', compact('anggota'));
     }
 
     /**
@@ -60,7 +60,15 @@ class AnggotaController extends Controller
      */
     public function update(Request $request, Anggota $anggota)
     {
-        //
+        $data = $request->validate([
+            'nim' => 'required|max:15|unique:anggotas,nim,' . $anggota->id,
+            'nama' => 'required|max:100',
+            'divisi' => 'required',
+            'angkatan' => 'required|integer',
+        ]);
+        $anggota->update($data);
+
+        return redirect()->route('anggota.index')->with('sukses', 'Data berhasil diperbarui.');
     }
 
     /**
@@ -68,6 +76,7 @@ class AnggotaController extends Controller
      */
     public function destroy(Anggota $anggota)
     {
-        //
+        $anggota->delete();
+        return redirect()->route('anggota.index')->with('sukses', 'Data berhasil dihapus.');
     }
 }
